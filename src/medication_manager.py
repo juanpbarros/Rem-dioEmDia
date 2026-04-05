@@ -30,6 +30,27 @@ class GerenciadorMedicamentos:
     def listar_medicamentos(self) -> list[Medicamento]:
         return self.medicamentos
 
+    def marcar_dose_como_tomada(self, indice_medicamento: int) -> str:
+        if indice_medicamento < 0 or indice_medicamento >= len(self.medicamentos):
+            raise ValueError("Medicamento não encontrado.")
+
+        medicamento = self.medicamentos[indice_medicamento]
+
+        for horario in medicamento.horarios:
+            if horario not in medicamento.horarios_tomados:
+                medicamento.horarios_tomados.append(horario)
+                self._salvar()
+                return horario
+
+        raise ValueError("Todas as doses desse medicamento já foram marcadas como tomadas.")
+
+    def remover_medicamento(self, indice_medicamento: int) -> None:
+        if indice_medicamento < 0 or indice_medicamento >= len(self.medicamentos):
+            raise ValueError("Medicamento não encontrado.")
+
+        self.medicamentos.pop(indice_medicamento)
+        self._salvar()
+
     def _salvar(self) -> None:
         if self.caminho_arquivo is None:
             salvar_medicamentos(self.medicamentos)
