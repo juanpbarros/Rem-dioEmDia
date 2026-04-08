@@ -51,9 +51,29 @@ def tela_marcar_dose(gerenciador: GerenciadorMedicamentos):
         return
 
     try:
-        indice = int(input("Digite o número do medicamento: ").strip()) - 1
-        horario = gerenciador.marcar_dose_como_tomada(indice)
-        print(f"Dose das {horario} marcada como tomada.")
+        indice_medicamento = int(input("Digite o número do medicamento: ").strip()) - 1
+        horarios_pendentes = gerenciador.listar_horarios_pendentes(indice_medicamento)
+
+        if not horarios_pendentes:
+            print("Todas as doses desse medicamento já foram marcadas como tomadas.")
+            return
+
+        print("\nHorários pendentes:")
+        for indice_horario, horario in enumerate(horarios_pendentes, start=1):
+            print(f"{indice_horario}. {horario}")
+
+        indice_horario = int(input("Digite o número do horário que deseja marcar: ").strip()) - 1
+
+        if indice_horario < 0 or indice_horario >= len(horarios_pendentes):
+            print("Erro: Horário inválido.")
+            return
+
+        horario_escolhido = horarios_pendentes[indice_horario]
+        horario_marcado = gerenciador.marcar_dose_como_tomada(
+            indice_medicamento, horario_escolhido
+        )
+        print(f"Dose das {horario_marcado} marcada como tomada.")
+
     except ValueError as erro:
         print(f"Erro: {erro}")
 
