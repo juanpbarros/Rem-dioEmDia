@@ -6,7 +6,7 @@
 
 A aplicação também pode ser utilizada por meio da versão executável para Windows:
 
-* [Baixar Remédio em Dia (.zip)](https://github.com/juanpbarros/Rem-dioEmDia/releases/download/v1.0.1/RemedioEmDia.zip)
+* [Baixar Remédio em Dia (.zip)](https://github.com/juanpbarros/Rem-dioEmDia/releases/download/v1.0.1/RemediaEmDia.zip)
 * [Ver página da release v1.0.1](https://github.com/juanpbarros/Rem-dioEmDia/releases/tag/v1.0.1)
 
 ---
