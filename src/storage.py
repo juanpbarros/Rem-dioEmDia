@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import List
 
-from models import Medicamento
+from src.models import Medicamento
 
 
 ARQUIVO_DADOS = Path("data/medications.json")

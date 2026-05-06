@@ -1,5 +1,5 @@
-from medication_manager import GerenciadorMedicamentos
-
+from src.medication_manager import GerenciadorMedicamentos
+from src.api.time_service import obter_data_hora
 
 def mostrar_menu():
     print("\n=== Remédio em Dia ===")
@@ -27,6 +27,13 @@ def tela_cadastrar_medicamento(gerenciador: GerenciadorMedicamentos):
 
 def tela_listar_medicamentos(gerenciador: GerenciadorMedicamentos):
     print("\n--- Lista de medicamentos ---")
+
+    try:
+        info = obter_data_hora()
+        print(f"📅 Data: {info['data']} | ⏰ Hora: {info['hora']}\n")
+    except Exception:
+        print("⚠️ Não foi possível obter data/hora atual.\n")
+
     medicamentos = gerenciador.listar_medicamentos()
 
     if not medicamentos:
@@ -40,7 +47,6 @@ def tela_listar_medicamentos(gerenciador: GerenciadorMedicamentos):
             "   Doses tomadas: "
             f"{', '.join(medicamento.horarios_tomados) if medicamento.horarios_tomados else 'Nenhuma'}"
         )
-
 
 def tela_marcar_dose(gerenciador: GerenciadorMedicamentos):
     print("\n--- Marcar dose como tomada ---")
