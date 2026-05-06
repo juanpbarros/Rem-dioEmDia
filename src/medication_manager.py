@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from models import Medicamento
-from storage import carregar_medicamentos, salvar_medicamentos
+from src.models import Medicamento
+from src.storage import carregar_medicamentos, salvar_medicamentos
 
 
 class GerenciadorMedicamentos:
