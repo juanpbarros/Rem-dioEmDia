@@ -2,6 +2,8 @@
 
 > Aplicação em Python desenvolvida para auxiliar no controle de medicamentos de idosos, cuidadores e familiares, promovendo mais organização, segurança e acompanhamento da rotina medicamentosa.
 
+---
+
 ## ⬇️ Download da aplicação
 
 A aplicação também pode ser utilizada por meio da versão executável para Windows:
@@ -53,6 +55,21 @@ A aplicação atualmente oferece as seguintes funcionalidades:
 * ✅ Escolher manualmente qual horário da dose foi tomado
 * ✅ Remover medicamentos
 * ✅ Persistência local em arquivo JSON
+* 🌐 Integração com API de data e hora
+
+---
+
+## 🌐 Integração com API
+
+A aplicação consome uma API pública de data e hora para exibir informações atualizadas ao usuário durante a execução.
+
+Essa integração permite:
+
+* contextualizar os horários dos medicamentos;
+* possibilitar futuras funcionalidades como alertas de atraso;
+* enriquecer a experiência do usuário com dados em tempo real.
+
+A comunicação com a API é realizada por meio de requisições HTTP, com tratamento de erros para garantir que a aplicação continue funcionando mesmo em caso de falhas externas.
 
 ---
 
@@ -63,6 +80,7 @@ Este projeto foi desenvolvido com as seguintes tecnologias e ferramentas:
 * **Python 3.14**
 * **Pytest** → testes automatizados
 * **Ruff** → linting / análise estática
+* **Requests** → consumo de API
 * **Git** → controle de versão
 * **GitHub** → hospedagem do repositório
 * **GitHub Actions** → integração contínua (CI)
@@ -78,10 +96,13 @@ remedio-em-dia/
 │   ├── main.py
 │   ├── medication_manager.py
 │   ├── models.py
-│   └── storage.py
+│   ├── storage.py
+│   └── api/
+│       └── time_service.py
 ├── tests/
 │   ├── test_medication_manager.py
-│   └── test_storage.py
+│   ├── test_storage.py
+│   └── test_time_api.py
 ├── data/
 │   └── medications.json
 ├── .github/
@@ -98,9 +119,7 @@ remedio-em-dia/
 
 ## 🖥️ Interface da aplicação
 
-A aplicação utiliza uma **interface CLI (Command Line Interface)**, ou seja, uma interface em linha de comando, conforme permitido pelos requisitos da atividade.
-
-Ao executar o sistema, o usuário pode interagir com um menu principal para realizar operações como cadastro, listagem, marcação de doses e remoção de medicamentos.
+A aplicação utiliza uma **interface CLI (Command Line Interface)**, permitindo interação via terminal.
 
 ### Exemplo de menu
 
@@ -161,7 +180,7 @@ pip install -r requirements.txt
 ### 5. Executar a aplicação
 
 ```bash
-python src/main.py
+python -m src.main
 ```
 
 ---
@@ -183,22 +202,20 @@ Caso prefira, também é possível utilizar a versão executável da aplicação
 ### Observações importantes
 
 * Compatível com **Windows**
-* **Não requer instalação do Python**
-* O Windows pode exibir um aviso de segurança por se tratar de um executável **não assinado digitalmente**
+* Não requer instalação do Python
+* O Windows pode exibir um aviso de segurança por se tratar de um executável não assinado digitalmente
 * O código-fonte permanece disponível neste repositório para consulta e validação
 
 ---
 
 ## 🧪 Testes automatizados
 
-O projeto possui testes automatizados utilizando **Pytest**, cobrindo comportamentos importantes da aplicação, como:
+O projeto possui testes automatizados utilizando **Pytest**, incluindo:
 
-* cadastro de medicamentos;
+* testes unitários das funcionalidades principais;
 * validação de entradas inválidas;
-* marcação de doses;
-* escolha de horários;
-* remoção de medicamentos;
-* persistência em arquivo JSON.
+* testes de persistência;
+* teste de integração com API (utilizando mock).
 
 ### Rodar os testes
 
@@ -210,7 +227,7 @@ python -m pytest
 
 ## 🔍 Análise estática de código (Lint)
 
-O projeto utiliza **Ruff** para análise estática de código, ajudando a manter a organização, padronização e qualidade do código-fonte.
+O projeto utiliza **Ruff** para análise estática de código.
 
 ### Rodar o lint
 
@@ -222,40 +239,36 @@ python -m ruff check .
 
 ## ⚙️ Integração Contínua (CI)
 
-O projeto conta com uma pipeline de **Integração Contínua** configurada com **GitHub Actions**.
+O projeto conta com uma pipeline de **Integração Contínua** com GitHub Actions.
 
-A cada `push` ou `pull request` na branch principal, o GitHub executa automaticamente:
+A cada push ou pull request:
 
 * instalação do ambiente Python;
 * instalação das dependências;
-* análise estática com Ruff;
-* execução dos testes com Pytest.
-
-Isso garante maior confiabilidade e reprodutibilidade do projeto.
+* execução do lint;
+* execução dos testes.
 
 ---
 
 ## 📦 Persistência de dados
 
-Os dados da aplicação são armazenados localmente em um arquivo JSON:
+Os dados são armazenados em:
 
 ```text
 data/medications.json
 ```
 
-Essa abordagem foi escolhida por ser simples, leve e suficiente para o escopo da versão inicial da aplicação.
-
 ---
 
 ## 🔖 Versionamento
 
-O projeto utiliza **versionamento semântico**, no formato:
+O projeto utiliza versionamento semântico:
 
 ```text
 MAJOR.MINOR.PATCH
 ```
 
-Versão atual do projeto:
+Versão atual:
 
 ```text
 1.0.1
@@ -265,24 +278,23 @@ Versão atual do projeto:
 
 ## 🚀 Evoluções futuras
 
-O projeto foi pensado com **escopo evolutivo**, permitindo futuras expansões. Algumas melhorias previstas para próximas versões incluem:
+O projeto foi planejado para evolução contínua, incluindo:
 
 * interface gráfica (GUI);
 * versão web da aplicação;
 * sistema de lembretes;
-* histórico mais detalhado de doses;
-* integração com APIs externas;
+* histórico detalhado de doses;
 * melhorias de usabilidade e acessibilidade.
 
 ---
 
 ## 👨‍💻 Autor
 
-**Juan Barros**
-Projeto acadêmico desenvolvido para atividade de BootCamp.
+**Juan Barros**  
+Projeto acadêmico desenvolvido para BootCamp.
 
 ---
 
 ## 📄 Licença
 
-Este projeto foi desenvolvido para fins **acadêmicos e educacionais**.
+Projeto desenvolvido para fins educacionais.
