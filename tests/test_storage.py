@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from models import Medicamento
-from storage import carregar_medicamentos, salvar_medicamentos
+from src.models import Medicamento
+from src.storage import carregar_medicamentos, salvar_medicamentos
 
 
 def test_deve_salvar_e_carregar_medicamentos(tmp_path: Path):
