@@ -2,3 +2,4 @@ pytest
 ruff
 pyinstaller
 flask
+requests
