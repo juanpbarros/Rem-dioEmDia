@@ -1,10 +1,10 @@
 # 💊 Remédio em Dia
 
-> Aplicação em Python desenvolvida para auxiliar no controle de medicamentos de idosos, cuidadores e familiares, promovendo mais organização, segurança e acompanhamento da rotina medicamentosa.
+> Aplicação web em Python desenvolvida para auxiliar no controle de medicamentos de idosos, cuidadores e familiares, promovendo mais organização, segurança e acompanhamento da rotina medicamentosa.
 
 ## 🌐 Acesso online
 
-A versão web da aplicação está disponível em:
+A aplicação está disponível em:
 
 **👉 https://juanpbarros.pythonanywhere.com**
 
@@ -12,7 +12,7 @@ A versão web da aplicação está disponível em:
 
 ## 📌 Sobre o projeto
 
-O **Remédio em Dia** é uma aplicação desenvolvida com o objetivo de auxiliar no controle da administração de medicamentos, especialmente para **idosos**, **cuidadores** e **familiares** que necessitam acompanhar horários e doses de forma mais organizada.
+O **Remédio em Dia** é uma aplicação web desenvolvida com o objetivo de auxiliar no controle da administração de medicamentos, especialmente para **idosos**, **cuidadores** e **familiares** que necessitam acompanhar horários e doses de forma mais organizada.
 
 A proposta do projeto é oferecer uma solução simples, prática e funcional para reduzir esquecimentos, melhorar o acompanhamento da rotina medicamentosa e facilitar o controle diário dos medicamentos utilizados.
 
@@ -40,22 +40,16 @@ Diante desse cenário, o **Remédio em Dia** busca oferecer uma solução simple
 
 ---
 
-## 💡 Funcionalidades da versão atual
+## 💡 Funcionalidades
 
-A aplicação atualmente oferece as seguintes funcionalidades:
-
-* ✅ Cadastrar medicamento
-* ✅ Informar dosagem
+* ✅ Cadastrar medicamento com nome e dosagem
 * ✅ Definir horários de uso
-* ✅ Listar medicamentos cadastrados
+* ✅ Visualizar medicamentos com código de cores (tomado, atrasado, pendente)
 * ✅ Marcar doses como tomadas
-* ✅ Escolher manualmente qual horário da dose foi tomado
 * ✅ Remover medicamentos
 * ✅ Identificador único (UUID) para cada medicamento
 * ✅ Ordenação automática por horário
 * ✅ Persistência local em arquivo JSON
-* ✅ Interface **CLI** (linha de comando)
-* ✅ Interface **Web** (Flask)
 * ✅ Integração com API pública REST (timeapi.io) para data/hora
 * ✅ Fallback local automático caso a API esteja indisponível
 
@@ -63,20 +57,17 @@ A aplicação atualmente oferece as seguintes funcionalidades:
 
 ## 🛠️ Tecnologias utilizadas
 
-Este projeto foi desenvolvido com as seguintes tecnologias e ferramentas:
-
 * **Python 3.14**
-* **Flask** → interface web
-* **Pytest** → testes automatizados
-* **Ruff** → linting / análise estática
-* **requests** → consumo de API REST
-* **zoneinfo** → fuso horário local (fallback)
-* **Git** → controle de versão
-* **GitHub** → hospedagem do repositório
-* **GitHub Actions** → integração contínua (CI)
-* **GitHub Issues** → gestão de demandas
-* **PyInstaller** → geração da versão executável (`.exe`)
-* **PythonAnywhere** → deploy da versão web
+* **Flask** — framework web
+* **Pytest** — testes automatizados
+* **Ruff** — linting / análise estática
+* **requests** — consumo de API REST
+* **zoneinfo** — fuso horário local (fallback)
+* **Git** — controle de versão
+* **GitHub** — hospedagem do repositório
+* **GitHub Actions** — integração contínua (CI)
+* **GitHub Issues** — gestão de demandas
+* **PythonAnywhere** — deploy
 
 ---
 
@@ -85,15 +76,14 @@ Este projeto foi desenvolvido com as seguintes tecnologias e ferramentas:
 ```text
 remedio-em-dia/
 ├── src/
-│   ├── main.py                       # CLI (entrada principal)
 │   ├── medication_manager.py         # Lógica de negócio
 │   ├── models.py                     # Modelo Medicamento (com UUID)
-│   ├── validation.py                 # Validação extraída
+│   ├── validation.py                 # Validação
 │   ├── storage.py                    # Persistência JSON
 │   ├── api/
 │   │   └── time_service.py           # Integração com timeapi.io
 │   └── web/
-│       ├── app.py                    # Flask (interface web)
+│       ├── app.py                    # Aplicação Flask
 │       └── templates/
 │           └── index.html            # Template Jinja2
 ├── tests/
@@ -115,35 +105,17 @@ remedio-em-dia/
 
 ---
 
-## 🖥️ Interfaces da aplicação
-
-A aplicação conta com **duas interfaces** que compartilham a mesma lógica de negócio:
-
-### Interface Web (Flask)
-
-Acesse: **https://juanpbarros.pythonanywhere.com**
+## 🖥️ Interface
 
 A interface web exibe os medicamentos em cards com código de cores:
+
 * 🟢 **Verde** — dose já tomada
 * 🔴 **Vermelho** — horário atrasado
 * 🔵 **Azul** — pendente
 
-### Interface CLI (linha de comando)
-
-Menu principal com as opções de cadastro, listagem, marcação de doses e remoção:
-
-```text
-=== Remédio em Dia ===
-1. Cadastrar medicamento
-2. Listar medicamentos
-3. Marcar dose como tomada
-4. Remover medicamento
-5. Sair
-```
-
 ---
 
-## ▶️ Como executar o projeto pelo código-fonte
+## ▶️ Como executar localmente
 
 ### 1. Clonar o repositório
 
@@ -152,76 +124,35 @@ git clone https://github.com/juanpbarros/Rem-dioEmDia.git
 cd Rem-dioEmDia
 ```
 
----
-
-### 2. Criar um ambiente virtual (recomendado)
-
-```bash
-python -m venv .venv
-```
-
----
-
-### 3. Ativar o ambiente virtual
+### 2. Criar e ativar ambiente virtual
 
 #### Windows
 
 ```bash
+python -m venv .venv
 .venv\Scripts\activate
 ```
 
 #### Linux / macOS
 
 ```bash
+python -m venv .venv
 source .venv/bin/activate
 ```
 
----
-
-### 4. Instalar as dependências
+### 3. Instalar dependências
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-### 5. Executar a aplicação
-
-#### Interface CLI
-
-```bash
-python -m src.main
-```
-
-#### Interface Web
+### 4. Executar
 
 ```bash
 python -m flask --app src/web/app run
 ```
 
----
-
-## ⬇️ Como executar a versão executável (.exe)
-
-Caso prefira, também é possível utilizar a versão executável da aplicação, sem necessidade de instalar Python.
-
-### Download direto
-
-[Baixar Remédio em Dia (.zip)](https://github.com/juanpbarros/Rem-dioEmDia/releases/download/v1.0.1/RemedioEmDia.zip)
-
-### Passos para uso
-
-1. Baixe o arquivo `.zip`
-2. Extraia todos os arquivos
-3. Execute o arquivo `.exe`
-
-### Observações importantes
-
-* Compatível com **Windows**
-* Não requer instalação do Python
-* O Windows pode exibir um aviso de segurança por se tratar de um executável não assinado digitalmente
-* O código-fonte permanece disponível neste repositório para consulta e validação
+Acesse no navegador: **http://localhost:5000**
 
 ---
 
@@ -244,9 +175,7 @@ python -m pytest
 
 ## 🔍 Análise estática de código (Lint)
 
-O projeto utiliza **Ruff** para análise estática de código.
-
-### Rodar o lint
+O projeto utiliza **Ruff** para análise estática.
 
 ```bash
 python -m ruff check .
@@ -256,18 +185,18 @@ python -m ruff check .
 
 ## ⚙️ Integração Contínua (CI)
 
-O projeto conta com uma pipeline de **Integração Contínua** com GitHub Actions.
-
-A cada `push` ou `pull request` na branch `main`, o GitHub executa automaticamente:
+O projeto conta com uma pipeline de **Integração Contínua** configurada com **GitHub Actions**. A cada `push` ou `pull request` na branch `main`, o GitHub executa automaticamente:
 
 * instalação do ambiente Python;
 * instalação das dependências;
-* execução do lint;
-* execução dos testes.
+* análise estática com Ruff;
+* execução dos testes com Pytest.
+
+---
 
 ## 🚀 Deploy
 
-A versão web está publicada em:
+A aplicação está publicada em:
 
 **👉 https://juanpbarros.pythonanywhere.com**
 
@@ -277,7 +206,7 @@ O deploy foi realizado no **PythonAnywhere** (plano gratuito), com configuraçã
 
 ## 📦 Persistência de dados
 
-Os dados são armazenados em:
+Os dados ficam armazenados localmente em um arquivo JSON:
 
 ```text
 data/medications.json
@@ -287,39 +216,16 @@ data/medications.json
 
 ## 🔖 Versionamento
 
-O projeto utiliza versionamento semântico:
-
-```text
-MAJOR.MINOR.PATCH
-```
-
-Versão atual:
-
-```text
-1.0.1
-```
-
----
-
-## 🚀 Evoluções futuras
-
-O projeto foi planejado para evolução contínua, incluindo:
-
-* sistema de lembretes (notificações);
-* autenticação de usuários;
-* histórico mais detalhado de doses;
-* relatórios e exportação de dados;
-* melhorias de usabilidade e acessibilidade.
+O projeto utiliza **versionamento semântico** (MAJOR.MINOR.PATCH). Versão atual: **1.0.1**.
 
 ---
 
 ## 👨‍💻 Autor
 
-**Juan Barros**  
-Projeto acadêmico desenvolvido para BootCamp.
+**Juan Barros** — Projeto acadêmico desenvolvido para atividade de BootCamp.
 
 ---
 
 ## 📄 Licença
 
-Projeto desenvolvido para fins educacionais.
+Este projeto foi desenvolvido para fins **acadêmicos e educacionais**.
