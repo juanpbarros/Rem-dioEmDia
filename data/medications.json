@@ -1,15 +1,1 @@
-[
-    {
-        "nome": "Losartana",
-        "dosagem": "12mg",
-        "horarios": [
-            "08:00",
-            "12:00",
-            "15:00",
-            "20:00"
-        ],
-        "horarios_tomados": [
-            "08:00"
-        ]
-    }
-]
+[]
