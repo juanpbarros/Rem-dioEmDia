@@ -8,13 +8,6 @@ A versão web da aplicação está disponível em:
 
 **👉 https://juanpbarros.pythonanywhere.com**
 
-## ⬇️ Download da aplicação
-
-A aplicação também pode ser utilizada por meio da versão executável para Windows:
-
-* [Baixar Remédio em Dia (.zip)](https://github.com/juanpbarros/Rem-dioEmDia/releases/download/v1.0.1/RemedioEmDia.zip)
-* [Ver página da release v1.0.1](https://github.com/juanpbarros/Rem-dioEmDia/releases/tag/v1.0.1)
-
 ---
 
 ## 📌 Sobre o projeto
@@ -198,7 +191,7 @@ pip install -r requirements.txt
 #### Interface CLI
 
 ```bash
-python src/main.py
+python -m src.main
 ```
 
 #### Interface Web
@@ -226,8 +219,8 @@ Caso prefira, também é possível utilizar a versão executável da aplicação
 ### Observações importantes
 
 * Compatível com **Windows**
-* **Não requer instalação do Python**
-* O Windows pode exibir um aviso de segurança por se tratar de um executável **não assinado digitalmente**
+* Não requer instalação do Python
+* O Windows pode exibir um aviso de segurança por se tratar de um executável não assinado digitalmente
 * O código-fonte permanece disponível neste repositório para consulta e validação
 
 ---
@@ -251,7 +244,7 @@ python -m pytest
 
 ## 🔍 Análise estática de código (Lint)
 
-O projeto utiliza **Ruff** para análise estática de código, ajudando a manter a organização, padronização e qualidade do código-fonte.
+O projeto utiliza **Ruff** para análise estática de código.
 
 ### Rodar o lint
 
@@ -263,16 +256,14 @@ python -m ruff check .
 
 ## ⚙️ Integração Contínua (CI)
 
-O projeto conta com uma pipeline de **Integração Contínua** configurada com **GitHub Actions**.
+O projeto conta com uma pipeline de **Integração Contínua** com GitHub Actions.
 
 A cada `push` ou `pull request` na branch `main`, o GitHub executa automaticamente:
 
 * instalação do ambiente Python;
 * instalação das dependências;
-* análise estática com Ruff;
-* execução dos testes com Pytest.
-
-Isso garante maior confiabilidade e reprodutibilidade do projeto.
+* execução do lint;
+* execução dos testes.
 
 ## 🚀 Deploy
 
@@ -286,25 +277,23 @@ O deploy foi realizado no **PythonAnywhere** (plano gratuito), com configuraçã
 
 ## 📦 Persistência de dados
 
-Os dados da aplicação são armazenados localmente em um arquivo JSON:
+Os dados são armazenados em:
 
 ```text
 data/medications.json
 ```
 
-Essa abordagem foi escolhida por ser simples, leve e suficiente para o escopo da versão inicial da aplicação.
-
 ---
 
 ## 🔖 Versionamento
 
-O projeto utiliza **versionamento semântico**, no formato:
+O projeto utiliza versionamento semântico:
 
 ```text
 MAJOR.MINOR.PATCH
 ```
 
-Versão atual do projeto:
+Versão atual:
 
 ```text
 1.0.1
@@ -314,7 +303,7 @@ Versão atual do projeto:
 
 ## 🚀 Evoluções futuras
 
-O projeto foi pensado com **escopo evolutivo**, permitindo futuras expansões. Algumas melhorias previstas para próximas versões incluem:
+O projeto foi planejado para evolução contínua, incluindo:
 
 * sistema de lembretes (notificações);
 * autenticação de usuários;
@@ -326,11 +315,11 @@ O projeto foi pensado com **escopo evolutivo**, permitindo futuras expansões. A
 
 ## 👨‍💻 Autor
 
-**Juan Barros**
-Projeto acadêmico desenvolvido para atividade de BootCamp.
+**Juan Barros**  
+Projeto acadêmico desenvolvido para BootCamp.
 
 ---
 
 ## 📄 Licença
 
-Este projeto foi desenvolvido para fins **acadêmicos e educacionais**.
+Projeto desenvolvido para fins educacionais.
