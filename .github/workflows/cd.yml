@@ -1,0 +1,34 @@
+name: CD - Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements.txt
+
+      - name: Rodar lint
+        run: python -m ruff check .
+
+      - name: Rodar testes
+        run: python -m pytest
+
+      - name: Deploy no PythonAnywhere
+        run: |
+          curl -s -X POST \
+            "https://www.pythonanywhere.com/api/v0/user/${{ secrets.PA_USERNAME }}/webapps/${{ secrets.PA_USERNAME }}.pythonanywhere.com/reload/" \
+            -H "Authorization: Token ${{ secrets.PA_API_TOKEN }}"
+          echo "Deploy disparado com sucesso!"
