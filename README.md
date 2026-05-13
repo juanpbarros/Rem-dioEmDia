@@ -2,6 +2,12 @@
 
 > Aplicação em Python desenvolvida para auxiliar no controle de medicamentos de idosos, cuidadores e familiares, promovendo mais organização, segurança e acompanhamento da rotina medicamentosa.
 
+## 🌐 Acesso online
+
+A versão web da aplicação está disponível em:
+
+**👉 https://juanpbarros.pythonanywhere.com**
+
 ## ⬇️ Download da aplicação
 
 A aplicação também pode ser utilizada por meio da versão executável para Windows:
@@ -52,7 +58,13 @@ A aplicação atualmente oferece as seguintes funcionalidades:
 * ✅ Marcar doses como tomadas
 * ✅ Escolher manualmente qual horário da dose foi tomado
 * ✅ Remover medicamentos
+* ✅ Identificador único (UUID) para cada medicamento
+* ✅ Ordenação automática por horário
 * ✅ Persistência local em arquivo JSON
+* ✅ Interface **CLI** (linha de comando)
+* ✅ Interface **Web** (Flask)
+* ✅ Integração com API pública REST (timeapi.io) para data/hora
+* ✅ Fallback local automático caso a API esteja indisponível
 
 ---
 
@@ -61,12 +73,17 @@ A aplicação atualmente oferece as seguintes funcionalidades:
 Este projeto foi desenvolvido com as seguintes tecnologias e ferramentas:
 
 * **Python 3.14**
+* **Flask** → interface web
 * **Pytest** → testes automatizados
 * **Ruff** → linting / análise estática
+* **requests** → consumo de API REST
+* **zoneinfo** → fuso horário local (fallback)
 * **Git** → controle de versão
 * **GitHub** → hospedagem do repositório
 * **GitHub Actions** → integração contínua (CI)
+* **GitHub Issues** → gestão de demandas
 * **PyInstaller** → geração da versão executável (`.exe`)
+* **PythonAnywhere** → deploy da versão web
 
 ---
 
@@ -75,13 +92,22 @@ Este projeto foi desenvolvido com as seguintes tecnologias e ferramentas:
 ```text
 remedio-em-dia/
 ├── src/
-│   ├── main.py
-│   ├── medication_manager.py
-│   ├── models.py
-│   └── storage.py
+│   ├── main.py                       # CLI (entrada principal)
+│   ├── medication_manager.py         # Lógica de negócio
+│   ├── models.py                     # Modelo Medicamento (com UUID)
+│   ├── validation.py                 # Validação extraída
+│   ├── storage.py                    # Persistência JSON
+│   ├── api/
+│   │   └── time_service.py           # Integração com timeapi.io
+│   └── web/
+│       ├── app.py                    # Flask (interface web)
+│       └── templates/
+│           └── index.html            # Template Jinja2
 ├── tests/
-│   ├── test_medication_manager.py
-│   └── test_storage.py
+│   ├── test_medication_manager.py    # Testes unitários
+│   ├── test_storage.py              # Testes de persistência
+│   ├── test_time_api.py             # Teste de integração (API)
+│   └── test_web_app.py             # Testes de integração (Flask)
 ├── data/
 │   └── medications.json
 ├── .github/
@@ -96,13 +122,22 @@ remedio-em-dia/
 
 ---
 
-## 🖥️ Interface da aplicação
+## 🖥️ Interfaces da aplicação
 
-A aplicação utiliza uma **interface CLI (Command Line Interface)**, ou seja, uma interface em linha de comando, conforme permitido pelos requisitos da atividade.
+A aplicação conta com **duas interfaces** que compartilham a mesma lógica de negócio:
 
-Ao executar o sistema, o usuário pode interagir com um menu principal para realizar operações como cadastro, listagem, marcação de doses e remoção de medicamentos.
+### Interface Web (Flask)
 
-### Exemplo de menu
+Acesse: **https://juanpbarros.pythonanywhere.com**
+
+A interface web exibe os medicamentos em cards com código de cores:
+* 🟢 **Verde** — dose já tomada
+* 🔴 **Vermelho** — horário atrasado
+* 🔵 **Azul** — pendente
+
+### Interface CLI (linha de comando)
+
+Menu principal com as opções de cadastro, listagem, marcação de doses e remoção:
 
 ```text
 === Remédio em Dia ===
@@ -160,8 +195,16 @@ pip install -r requirements.txt
 
 ### 5. Executar a aplicação
 
+#### Interface CLI
+
 ```bash
 python src/main.py
+```
+
+#### Interface Web
+
+```bash
+python -m flask --app src/web/app run
 ```
 
 ---
@@ -191,14 +234,12 @@ Caso prefira, também é possível utilizar a versão executável da aplicação
 
 ## 🧪 Testes automatizados
 
-O projeto possui testes automatizados utilizando **Pytest**, cobrindo comportamentos importantes da aplicação, como:
+O projeto possui **19 testes automatizados** utilizando **Pytest**, divididos em:
 
-* cadastro de medicamentos;
-* validação de entradas inválidas;
-* marcação de doses;
-* escolha de horários;
-* remoção de medicamentos;
-* persistência em arquivo JSON.
+* **Testes unitários** — cadastro, validação, marcação de doses, remoção, ordenação
+* **Testes de integração** — comunicação com API externa (timeapi.io)
+* **Testes de integração web** — rotas do Flask (home, adicionar, remover, marcar)
+* **Testes de persistência** — salvar/carregar JSON
 
 ### Rodar os testes
 
@@ -224,7 +265,7 @@ python -m ruff check .
 
 O projeto conta com uma pipeline de **Integração Contínua** configurada com **GitHub Actions**.
 
-A cada `push` ou `pull request` na branch principal, o GitHub executa automaticamente:
+A cada `push` ou `pull request` na branch `main`, o GitHub executa automaticamente:
 
 * instalação do ambiente Python;
 * instalação das dependências;
@@ -232,6 +273,14 @@ A cada `push` ou `pull request` na branch principal, o GitHub executa automatica
 * execução dos testes com Pytest.
 
 Isso garante maior confiabilidade e reprodutibilidade do projeto.
+
+## 🚀 Deploy
+
+A versão web está publicada em:
+
+**👉 https://juanpbarros.pythonanywhere.com**
+
+O deploy foi realizado no **PythonAnywhere** (plano gratuito), com configuração WSGI manual e ambiente virtual isolado.
 
 ---
 
@@ -267,11 +316,10 @@ Versão atual do projeto:
 
 O projeto foi pensado com **escopo evolutivo**, permitindo futuras expansões. Algumas melhorias previstas para próximas versões incluem:
 
-* interface gráfica (GUI);
-* versão web da aplicação;
-* sistema de lembretes;
+* sistema de lembretes (notificações);
+* autenticação de usuários;
 * histórico mais detalhado de doses;
-* integração com APIs externas;
+* relatórios e exportação de dados;
 * melhorias de usabilidade e acessibilidade.
 
 ---
