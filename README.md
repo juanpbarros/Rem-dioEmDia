@@ -2,14 +2,11 @@
 
 > Aplicação em Python desenvolvida para auxiliar no controle de medicamentos de idosos, cuidadores e familiares, promovendo mais organização, segurança e acompanhamento da rotina medicamentosa.
 
----
+## 🌐 Acesso online
 
-## ⬇️ Download da aplicação
+A versão web da aplicação está disponível em:
 
-A aplicação também pode ser utilizada por meio da versão executável para Windows:
-
-* [Baixar Remédio em Dia (.zip)](https://github.com/juanpbarros/Rem-dioEmDia/releases/download/v1.0.1/RemediaEmDia.zip)
-* [Ver página da release v1.0.1](https://github.com/juanpbarros/Rem-dioEmDia/releases/tag/v1.0.1)
+**👉 https://juanpbarros.pythonanywhere.com**
 
 ---
 
@@ -54,22 +51,13 @@ A aplicação atualmente oferece as seguintes funcionalidades:
 * ✅ Marcar doses como tomadas
 * ✅ Escolher manualmente qual horário da dose foi tomado
 * ✅ Remover medicamentos
+* ✅ Identificador único (UUID) para cada medicamento
+* ✅ Ordenação automática por horário
 * ✅ Persistência local em arquivo JSON
-* 🌐 Integração com API de data e hora
-
----
-
-## 🌐 Integração com API
-
-A aplicação consome uma API pública de data e hora para exibir informações atualizadas ao usuário durante a execução.
-
-Essa integração permite:
-
-* contextualizar os horários dos medicamentos;
-* possibilitar futuras funcionalidades como alertas de atraso;
-* enriquecer a experiência do usuário com dados em tempo real.
-
-A comunicação com a API é realizada por meio de requisições HTTP, com tratamento de erros para garantir que a aplicação continue funcionando mesmo em caso de falhas externas.
+* ✅ Interface **CLI** (linha de comando)
+* ✅ Interface **Web** (Flask)
+* ✅ Integração com API pública REST (timeapi.io) para data/hora
+* ✅ Fallback local automático caso a API esteja indisponível
 
 ---
 
@@ -78,13 +66,17 @@ A comunicação com a API é realizada por meio de requisições HTTP, com trata
 Este projeto foi desenvolvido com as seguintes tecnologias e ferramentas:
 
 * **Python 3.14**
+* **Flask** → interface web
 * **Pytest** → testes automatizados
 * **Ruff** → linting / análise estática
-* **Requests** → consumo de API
+* **requests** → consumo de API REST
+* **zoneinfo** → fuso horário local (fallback)
 * **Git** → controle de versão
 * **GitHub** → hospedagem do repositório
 * **GitHub Actions** → integração contínua (CI)
+* **GitHub Issues** → gestão de demandas
 * **PyInstaller** → geração da versão executável (`.exe`)
+* **PythonAnywhere** → deploy da versão web
 
 ---
 
@@ -93,16 +85,22 @@ Este projeto foi desenvolvido com as seguintes tecnologias e ferramentas:
 ```text
 remedio-em-dia/
 ├── src/
-│   ├── main.py
-│   ├── medication_manager.py
-│   ├── models.py
-│   ├── storage.py
-│   └── api/
-│       └── time_service.py
+│   ├── main.py                       # CLI (entrada principal)
+│   ├── medication_manager.py         # Lógica de negócio
+│   ├── models.py                     # Modelo Medicamento (com UUID)
+│   ├── validation.py                 # Validação extraída
+│   ├── storage.py                    # Persistência JSON
+│   ├── api/
+│   │   └── time_service.py           # Integração com timeapi.io
+│   └── web/
+│       ├── app.py                    # Flask (interface web)
+│       └── templates/
+│           └── index.html            # Template Jinja2
 ├── tests/
-│   ├── test_medication_manager.py
-│   ├── test_storage.py
-│   └── test_time_api.py
+│   ├── test_medication_manager.py    # Testes unitários
+│   ├── test_storage.py              # Testes de persistência
+│   ├── test_time_api.py             # Teste de integração (API)
+│   └── test_web_app.py             # Testes de integração (Flask)
 ├── data/
 │   └── medications.json
 ├── .github/
@@ -117,11 +115,22 @@ remedio-em-dia/
 
 ---
 
-## 🖥️ Interface da aplicação
+## 🖥️ Interfaces da aplicação
 
-A aplicação utiliza uma **interface CLI (Command Line Interface)**, permitindo interação via terminal.
+A aplicação conta com **duas interfaces** que compartilham a mesma lógica de negócio:
 
-### Exemplo de menu
+### Interface Web (Flask)
+
+Acesse: **https://juanpbarros.pythonanywhere.com**
+
+A interface web exibe os medicamentos em cards com código de cores:
+* 🟢 **Verde** — dose já tomada
+* 🔴 **Vermelho** — horário atrasado
+* 🔵 **Azul** — pendente
+
+### Interface CLI (linha de comando)
+
+Menu principal com as opções de cadastro, listagem, marcação de doses e remoção:
 
 ```text
 === Remédio em Dia ===
@@ -179,8 +188,16 @@ pip install -r requirements.txt
 
 ### 5. Executar a aplicação
 
+#### Interface CLI
+
 ```bash
 python -m src.main
+```
+
+#### Interface Web
+
+```bash
+python -m flask --app src/web/app run
 ```
 
 ---
@@ -210,12 +227,12 @@ Caso prefira, também é possível utilizar a versão executável da aplicação
 
 ## 🧪 Testes automatizados
 
-O projeto possui testes automatizados utilizando **Pytest**, incluindo:
+O projeto possui **19 testes automatizados** utilizando **Pytest**, divididos em:
 
-* testes unitários das funcionalidades principais;
-* validação de entradas inválidas;
-* testes de persistência;
-* teste de integração com API (utilizando mock).
+* **Testes unitários** — cadastro, validação, marcação de doses, remoção, ordenação
+* **Testes de integração** — comunicação com API externa (timeapi.io)
+* **Testes de integração web** — rotas do Flask (home, adicionar, remover, marcar)
+* **Testes de persistência** — salvar/carregar JSON
 
 ### Rodar os testes
 
@@ -241,12 +258,20 @@ python -m ruff check .
 
 O projeto conta com uma pipeline de **Integração Contínua** com GitHub Actions.
 
-A cada push ou pull request:
+A cada `push` ou `pull request` na branch `main`, o GitHub executa automaticamente:
 
 * instalação do ambiente Python;
 * instalação das dependências;
 * execução do lint;
 * execução dos testes.
+
+## 🚀 Deploy
+
+A versão web está publicada em:
+
+**👉 https://juanpbarros.pythonanywhere.com**
+
+O deploy foi realizado no **PythonAnywhere** (plano gratuito), com configuração WSGI manual e ambiente virtual isolado.
 
 ---
 
@@ -280,10 +305,10 @@ Versão atual:
 
 O projeto foi planejado para evolução contínua, incluindo:
 
-* interface gráfica (GUI);
-* versão web da aplicação;
-* sistema de lembretes;
-* histórico detalhado de doses;
+* sistema de lembretes (notificações);
+* autenticação de usuários;
+* histórico mais detalhado de doses;
+* relatórios e exportação de dados;
 * melhorias de usabilidade e acessibilidade.
 
 ---
