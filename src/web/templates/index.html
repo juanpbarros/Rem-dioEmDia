@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Remédio em Dia</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7fb;
+            padding: 40px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input {
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .medicamento {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .medicamento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .medicamento-header h3 {
+            font-size: 22px;
+        }
+
+        .dosagem {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .horarios {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .horario {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+        }
+
+        .tomado {
+            background-color: #dcfce7;
+            border-color: #86efac;
+        }
+
+        .atrasado {
+            background-color: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        .acoes {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .acao {
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .marcar {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .marcar:hover {
+            background-color: #1d4ed8;
+        }
+
+        .remover {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .remover:hover {
+            background-color: #dc2626;
+        }
+
+        .vazio {
+            color: #6b7280;
+            text-align: center;
+            padding: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>💊 Remédio em Dia</h1>
+
+            <p>
+                {% if info %}
+                    📅 {{ info.data }} | ⏰ {{ info.hora }}
+                {% else %}
+                    ⚠️ Data/hora indisponível
+                {% endif %}
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Adicionar medicamento</h2>
+
+            <form action="/adicionar" method="post">
+
+                <input
+                    type="text"
+                    name="nome"
+                    placeholder="Nome do medicamento"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="dosagem"
+                    placeholder="Dosagem"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="horarios"
+                    placeholder="08:00,12:00,20:00"
+                    required
+                >
+
+                <button type="submit">
+                    Adicionar medicamento
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Medicamentos cadastrados</h2>
+
+            {% if medicamentos %}
+
+                {% for medicamento in medicamentos %}
+
+                    {% if info %}
+                        {% set atrasados = gerenciador.listar_horarios_atrasados(
+                            medicamento.id,
+                            info.hora
+                        ) %}
+                    {% else %}
+                        {% set atrasados = [] %}
+                    {% endif %}
+
+                    <div class="medicamento">
+
+                        <div class="medicamento-header">
+
+                            <div>
+                                <h3>{{ medicamento.nome }}</h3>
+                                <p class="dosagem">
+                                    {{ medicamento.dosagem }}
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="horarios">
+
+                            {% for horario in medicamento.horarios %}
+
+                                {% if horario in medicamento.horarios_tomados %}
+
+                                    <div class="horario tomado">
+                                        ✔️ {{ horario }}
+                                    </div>
+
+                                {% elif horario in atrasados %}
+
+                                    <div class="horario atrasado">
+                                        ⚠️ {{ horario }}
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="horario">
+                                        ⏰ {{ horario }}
+                                    </div>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="acoes">
+
+                            {% for horario in medicamento.horarios %}
+
+                                {% if horario not in medicamento.horarios_tomados %}
+
+                                    <a
+                                        class="acao marcar"
+                                        href="/marcar/{{ medicamento.id }}/{{ horario }}"
+                                    >
+                                        Marcar {{ horario }}
+                                    </a>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                            <a
+                                class="acao remover"
+                                href="/remover/{{ medicamento.id }}"
+                            >
+                                Remover
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p class="vazio">
+                    Nenhum medicamento cadastrado.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

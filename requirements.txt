@@ -1,4 +1,4 @@
 pytest
 ruff
 pyinstaller
-requests
+flask

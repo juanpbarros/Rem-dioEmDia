@@ -3,6 +3,7 @@ from pathlib import Path
 
 from src.models import Medicamento
 from src.storage import carregar_medicamentos, salvar_medicamentos
+from src.validation import validar_nome, validar_dosagem, validar_horarios
 
 
 class GerenciadorMedicamentos:
@@ -14,20 +15,21 @@ class GerenciadorMedicamentos:
         else:
             self.medicamentos = carregar_medicamentos(caminho_arquivo)
 
+    def _encontrar_por_id(self, id_medicamento: str) -> Medicamento:
+        for med in self.medicamentos:
+            if med.id == id_medicamento:
+                return med
+        raise ValueError("Medicamento não encontrado.")
+
     def adicionar_medicamento(
         self,
         nome: str,
         dosagem: str,
         horarios: list[str],
     ) -> None:
-        if not nome.strip():
-            raise ValueError("O nome do medicamento não pode ser vazio.")
-
-        if not dosagem.strip():
-            raise ValueError("A dosagem não pode ser vazia.")
-
-        if not horarios:
-            raise ValueError("É necessário informar pelo menos um horário.")
+        validar_nome(nome)
+        validar_dosagem(dosagem)
+        validar_horarios(horarios)
 
         self.medicamentos.append(
             Medicamento(
@@ -40,19 +42,16 @@ class GerenciadorMedicamentos:
         self._salvar()
 
     def listar_medicamentos(self) -> list[Medicamento]:
-        return self.medicamentos
+        return sorted(
+            self.medicamentos,
+            key=lambda m: m.horarios[0] if m.horarios else "",
+        )
 
     def listar_horarios_pendentes(
         self,
-        indice_medicamento: int,
+        id_medicamento: str,
     ) -> list[str]:
-        if (
-            indice_medicamento < 0
-            or indice_medicamento >= len(self.medicamentos)
-        ):
-            raise ValueError("Medicamento não encontrado.")
-
-        medicamento = self.medicamentos[indice_medicamento]
+        medicamento = self._encontrar_por_id(id_medicamento)
 
         return [
             horario
@@ -62,50 +61,32 @@ class GerenciadorMedicamentos:
 
     def listar_horarios_atrasados(
         self,
-        indice_medicamento: int,
+        id_medicamento: str,
         hora_atual: str,
     ) -> list[str]:
-        if (
-            indice_medicamento < 0
-            or indice_medicamento >= len(self.medicamentos)
-        ):
-            raise ValueError("Medicamento não encontrado.")
+        medicamento = self._encontrar_por_id(id_medicamento)
 
-        medicamento = self.medicamentos[indice_medicamento]
+        hora_atual_dt = datetime.strptime(hora_atual, "%H:%M")
 
-        hora_atual_dt = datetime.strptime(
-            hora_atual,
-            "%H:%M",
-        )
-
-        horarios_atrasados = []
+        atrasados = []
 
         for horario in medicamento.horarios:
-            if horario in medicamento.horarios_tomados:
-                continue
+            horario_dt = datetime.strptime(horario, "%H:%M")
 
-            horario_dt = datetime.strptime(
-                horario,
-                "%H:%M",
-            )
+            if (
+                horario_dt < hora_atual_dt
+                and horario not in medicamento.horarios_tomados
+            ):
+                atrasados.append(horario)
 
-            if horario_dt < hora_atual_dt:
-                horarios_atrasados.append(horario)
-
-        return horarios_atrasados
+        return atrasados
 
     def marcar_dose_como_tomada(
         self,
-        indice_medicamento: int,
+        id_medicamento: str,
         horario_escolhido: str,
     ) -> str:
-        if (
-            indice_medicamento < 0
-            or indice_medicamento >= len(self.medicamentos)
-        ):
-            raise ValueError("Medicamento não encontrado.")
-
-        medicamento = self.medicamentos[indice_medicamento]
+        medicamento = self._encontrar_por_id(id_medicamento)
 
         if horario_escolhido not in medicamento.horarios:
             raise ValueError(
@@ -125,16 +106,10 @@ class GerenciadorMedicamentos:
 
     def remover_medicamento(
         self,
-        indice_medicamento: int,
+        id_medicamento: str,
     ) -> None:
-        if (
-            indice_medicamento < 0
-            or indice_medicamento >= len(self.medicamentos)
-        ):
-            raise ValueError("Medicamento não encontrado.")
-
-        self.medicamentos.pop(indice_medicamento)
-
+        medicamento = self._encontrar_por_id(id_medicamento)
+        self.medicamentos.remove(medicamento)
         self._salvar()
 
     def _salvar(self) -> None:
