@@ -1,5 +1,3 @@
-import pytest
-
 from src.api.time_service import obter_data_hora
 
 
